@@ -28,23 +28,32 @@ public class Ejercicio8 {
 
 			// Obtenermos una instancia de un objeto que implementa la interface statement.
 			String sql = "SELECT * FROM ALUMNOS WHERE ID = ?";
-			PreparedStatement st = con.prepareStatement(sql);			
-			st.setInt(1, 50);
+			PreparedStatement st = con.prepareStatement(sql);	
 			
-			ResultSet rs = st.executeQuery();
+			st.setInt(1, 50);
+			// No podremos adulterar la vulnerabilidad de la BD como sí hacíamos en el ejercicio anterior.
+			//st.setString(1, "-1 or 1=1");
+			
+			ResultSet infoAlumno = st.executeQuery();
 
 			// De esta forma vamos a saber si hay tablas o no
 			boolean hayFilas = false;
-			while(rs.next()) {
+			while (infoAlumno.next()) {
 				hayFilas = true;
-				System.out.println(rs.getString("APELLIDO1") + " " + rs.getString("APELLIDO2") + ", " + rs.getString("NOMBRE"));
+				System.out.println("************");
+				System.out.println("Nombre: " + infoAlumno.getString("nombre"));
+				System.out.println("Apellido1: " + infoAlumno.getString("apellido1"));
+				System.out.println("Apellido2: " + infoAlumno.getString("apellido2"));
+				System.out.println("email: " + infoAlumno.getString("email"));
+				System.out.println("edad: " + infoAlumno.getInt("edad"));
+				
 			}
 			if (!hayFilas) {
 				System.out.println("No hay resultados que mostrar");
 			}
 
 			//Cerramos ResultSet y Statement
-			rs.close();
+			infoAlumno.close();
 			st.close();
 
 		} catch (SQLException e) {

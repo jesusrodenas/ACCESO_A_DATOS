@@ -75,7 +75,7 @@ public class Ejercicio6 {
 	}
 	
 	/**
-	 * 
+	 * Método estático que establece una conexión con la base de datos PruebaConexionBD y devuelve un objeto PreparedStatement con el sent pasado como parámetro.
 	 * @param sent
 	 * @return
 	 * @throws SQLException

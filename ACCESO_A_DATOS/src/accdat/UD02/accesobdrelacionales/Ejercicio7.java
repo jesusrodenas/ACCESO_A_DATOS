@@ -41,9 +41,8 @@ public class Ejercicio7 {
 				System.out.println("edad: " + infoAlumno.getInt("edad"));
 			}
 			
-			
-
-			//Cerramos Statement
+			//Cerramos			
+			infoAlumno.close();
 			st.close();
 
 		} catch (SQLException e) {

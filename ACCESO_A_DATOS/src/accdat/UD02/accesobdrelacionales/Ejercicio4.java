@@ -32,6 +32,7 @@ public class Ejercicio4 {
 			// Obtenermos una instancia de un objeto que implementa la interface statement.
 			Statement st = con.createStatement();
 
+			// Recae sobre la parte select la eliminación de nulos en la salida.
 			String sql = 
 					"select concat(apellido1, nvl2(apellido2, ' ', ''), nvl(apellido2, ''), ', ', nombre) as alumno "
 							+ "from alumnos "

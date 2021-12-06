@@ -52,7 +52,7 @@ public class Ejercicio5 {
 	}
 	
 	/**
-	 * Método estático que devuelve una conexión con la base de datos PruebaConexionBD
+	 * Método estático que establece una conexión con la base de datos PruebaConexionBD y devuelve un objeto Statement.
 	 * @return
 	 * @throws SQLException
 	 */
