@@ -32,7 +32,10 @@ public class Ejercicio4 {
 			// Obtenermos una instancia de un objeto que implementa la interface statement.
 			Statement st = con.createStatement();
 
-			String sql = "SELECT APELLIDO1, NVL(APELLIDO2, '') AS APELLIDO2, NOMBRE FROM ALUMNOS ORDER BY APELLIDO1, APELLIDO2, NOMBRE";
+			String sql = 
+					"select concat(apellido1, nvl2(apellido2, ' ', ''), nvl(apellido2, ''), ', ', nombre) as alumno "
+							+ "from alumnos "
+							+ "order by apellido1, apellido2, nombre";
 
 			ResultSet rs = st.executeQuery(sql);
 
@@ -40,7 +43,7 @@ public class Ejercicio4 {
 			boolean hayFilas = false;
 			while(rs.next()) {
 				hayFilas = true;
-				System.out.println(rs.getString("APELLIDO1") + " " + rs.getString("APELLIDO2") + ", " + rs.getString("NOMBRE"));
+				System.out.println(rs.getString("alumno"));
 			}
 			if (!hayFilas) {
 				System.out.println("No hay resultados que mostrar");

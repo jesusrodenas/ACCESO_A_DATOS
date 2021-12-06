@@ -29,7 +29,7 @@ public class Ejercicio8 {
 			// Obtenermos una instancia de un objeto que implementa la interface statement.
 			String sql = "SELECT * FROM ALUMNOS WHERE ID = ?";
 			PreparedStatement st = con.prepareStatement(sql);			
-			st.setInt(1, 1);
+			st.setInt(1, 50);
 			
 			ResultSet rs = st.executeQuery();
 
