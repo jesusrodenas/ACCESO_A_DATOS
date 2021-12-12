@@ -29,25 +29,38 @@ public static Connection con = null;
 	public static String inserta_matricula = 
 			" INSERT INTO MATRICULA VALUES (?, ?) ";
 
+	/**
+	 * Muestra el menú y ejecuta la opción seleccionada mientras ésta no sea salir.
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/PruebaConexionBD", "root", "");
-			muestraMenu(con);
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}	
+		int opc = -1;
+		do {
+			try {
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/PruebaConexionBD", "root", "");
+				opc = muestraMenu();
+				tratarOpcion(opc, con);				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				if (con != null)
+					try {
+						con.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+			}
+		}while(opc!=3);
+		System.out.println("¡Hasta la próxima!");
 	}
 	
-	public static void muestraMenu(Connection c) throws SQLException {
+	/**
+	 * Muestra las distintas opciones.
+	 * @return Opción seleccionada por el usuario.
+	 * @throws SQLException
+	 */
+	public static int muestraMenu() throws SQLException {
 		Scanner sc = new Scanner(System.in);
 		int opc = 0;
 		System.out.println("Seleccione la operación a realizar: ");
@@ -55,7 +68,17 @@ public static Connection con = null;
 		System.out.println("2. Matricular un alumno en un módulo profesional");
 		System.out.println("3. Salir");
 		opc = Integer.parseInt(sc.nextLine());
+		return opc;
 		
+	}
+	
+	/**
+	 * Llama a los métodos que realizan cada una de las opciones.
+	 * @param opc
+	 * @param c
+	 * @throws SQLException
+	 */
+	public static void tratarOpcion(int opc, Connection c) throws SQLException {
 		switch(opc) {
 		case 1:
 			insertarModulo(c);
@@ -66,6 +89,11 @@ public static Connection con = null;
 		}
 	}
 	
+	/**
+	 * Comprueba que el módulo seleccionado no esté registrado y lo inserta en caso de que no exista.
+	 * @param c
+	 * @throws SQLException
+	 */
 	public static void insertarModulo(Connection c) throws SQLException {
 		PreparedStatement pstConsulta = c.prepareStatement(consulta_codigo_modulo);
 		PreparedStatement pstInserta = c.prepareStatement(inserta_modulo);
@@ -103,7 +131,15 @@ public static Connection con = null;
 		pstInserta.close();
 	}
 	
-	
+	/**
+	 * Comprueba la existencia del alumno cuyo ID es el insertado.
+	 * Comprueba que el módulo indicado exista.
+	 * Comprueba que la matrícula no exista previamente. 
+	 * Si todas estas condiciones se dan, registra la matrícula.
+	 * 
+	 * @param c
+	 * @throws SQLException
+	 */
 	public static void matricularAlumno(Connection c) throws SQLException {
 		PreparedStatement pstConsultaAlumno = c.prepareStatement(consulta_id_alumno);
 		PreparedStatement pstConsultaModulo = c.prepareStatement(consulta_codigo_modulo);
@@ -133,7 +169,7 @@ public static Connection con = null;
 			if(!existeAlumno) {
 				System.out.println("No existe en la BD ningún alumno con el ID indicado. Por favor, repita la operación indicando un ID válido.");
 			}else {
-				System.out.println("Los datos del alumno insertado son:");				
+				System.out.println("Los datos del alumno indicado son:");				
 				System.out.println("Nombre: " + rsConsultaAlumno.getString("nombre"));
 				System.out.println("Apellido1: " + rsConsultaAlumno.getString("apellido1"));
 				System.out.println("Apellido2: " + rsConsultaAlumno.getString("apellido2"));
