@@ -19,8 +19,10 @@ public class Ejercicio11 {
 	public static Connection con = null;
 	
 	public static String inserta_alumno =			 
-			"INSERT INTO ALUMNOS (nombre, apellido1, apellido2, email, edad) "
+			"INSERT INTO ALUMNO (nombre, apellido1, apellido2, email, edad) "
 			+ "VALUES (?, ?, ?, ?, ?);";
+	public static String actualiza_numesc = 
+			"UPDATE ALUMNO SET NUMESC = ? WHERE ID = ?";
 	public static String consulta_codigo_modulo = 
 			" SELECT * FROM MODULO WHERE CODIGO = ? ";
 	public static String inserta_modulo = 
@@ -32,7 +34,7 @@ public class Ejercicio11 {
 	public static String inserta_matricula = 
 			" INSERT INTO MATRICULA (ID, CODIGO, CURSO) VALUES (?, ?, ?) ";
 	public static String lista_matriculas_alu = 
-			" select mo.descripcion from matricula ma, alumno al, modulo mo where ma.id = al.id and ma.CODIGO = mo.CODIGO and al.numesc = ? ";	
+			" select mo.descripcion from matricula ma, alumno al, modulo mo where ma.id = al.id and ma.CODIGO = mo.CODIGO and al.numesc = ? and ma.curso = ? ";	
 	public static String borra_matriculas_alu = 
 			" delete from matricula where id = (select id from alumno where numesc = ? ) and curso = ?" ;
 	public static String lista_todas_matriculas =
@@ -50,6 +52,8 @@ public class Ejercicio11 {
 			"  where id = (select id from alumno where numesc = ? ) " +
 			"    and codigo = ? " +
 			"    and curso = ? ";
+	public static String modulos_pendientes = 
+			" select codigo from MATRICULA ma, alumno al where ma.ID = al.id and al.numesc = ? and nota< 5";
 
 	/**
 	 * Muestra el menú y ejecuta la opción seleccionada mientras ésta no sea salir.
@@ -73,7 +77,7 @@ public class Ejercicio11 {
 						e.printStackTrace();
 					}
 			}
-		}while(opc!=8);
+		}while(opc!=9);
 		System.out.println("¡Hasta la próxima!");
 	}
 	
@@ -93,7 +97,8 @@ public class Ejercicio11 {
 		System.out.println("5. Borrar las matrículas de un alumno para un curso determinado.");
 		System.out.println("6. Listado de alumnos y matrículas.");
 		System.out.println("7. Grabar una nota.");
-		System.out.println("8. Salir");
+		System.out.println("8. Actualizar matrículas de un alumno.");
+		System.out.println("9. Salir");
 		opc = Integer.parseInt(sc.nextLine());
 		return opc;
 		
@@ -109,6 +114,7 @@ public class Ejercicio11 {
 		switch(opc) {
 		case 1:
 			insertarAlumno(c);
+			break;
 		case 2:
 			insertarModulo(c);
 			break;
@@ -126,7 +132,10 @@ public class Ejercicio11 {
 			break;
 		case 7:
 			grabarNota(c);
-			break;	
+			break;
+		case 8:
+			actualizaMatriculas(c);
+			break;
 		}
 	}
 	
@@ -246,6 +255,25 @@ public class Ejercicio11 {
 		
 		return existeMatricula;
 	}	
+	
+	/**
+	 * Método para insertar una matrícula.
+	 * @param c Conexión sobre la BD
+	 * @param id id del alumno
+	 * @param numesc número escolar del alumno.
+	 * @param nota nota a aplicar.
+	 * @return
+	 * @throws SQLException
+	 */
+	public static int insertaMatricula(Connection c, int id, String codigo, int curso) throws SQLException{
+		PreparedStatement pstInsertaMatricula = c.prepareStatement(inserta_matricula);
+		pstInsertaMatricula.setInt(1, id);
+		pstInsertaMatricula.setString(2, codigo);
+		pstInsertaMatricula.setInt(3,  curso);
+		
+		return pstInsertaMatricula.executeUpdate();		
+		
+	}
 
 	
 	/**
@@ -254,7 +282,7 @@ public class Ejercicio11 {
 	 * @throws SQLException 
 	 */
 	public static void insertarAlumno(Connection c) throws SQLException {
-		PreparedStatement pstInsertarAlumno = c.prepareStatement(inserta_alumno);
+		PreparedStatement pstInsertarAlumno = c.prepareStatement(inserta_alumno, Statement.RETURN_GENERATED_KEYS);
 		
 		Scanner sc = new Scanner(System.in);
 		
@@ -280,8 +308,24 @@ public class Ejercicio11 {
 		
 		int resultado = pstInsertarAlumno.executeUpdate();
 		
+		
 		if (resultado==1) {
+			ResultSet gk = pstInsertarAlumno.getGeneratedKeys();
+			gk.next();
+			int id = gk.getInt(1);
+			int numesc = id*2;
+			
 			System.out.println("Alumno insertado con éxito.");
+			PreparedStatement pstActualizaNumesc = c.prepareStatement(actualiza_numesc);
+			pstActualizaNumesc.setInt(1,  numesc);
+			pstActualizaNumesc.setInt(2,  id);
+			resultado = pstActualizaNumesc.executeUpdate();
+			if (resultado==1) {
+				System.out.println("El alumno insertado tiene como número de escolarización: " + numesc);
+			}else {
+				System.out.println("Ha ocurrido algún error en la actualización del número de escolarización.");
+			}		
+			pstActualizaNumesc.close();
 		}else {
 			System.out.println("Ha ocurrido algún error en la inserción del alumno.");
 		}
@@ -403,14 +447,18 @@ public class Ejercicio11 {
 			System.out.println("Introduzca el número escolar del alumno:");
 			numesc = Integer.parseInt(sc.nextLine());
 			existeAlumno = compruebaAlumno(c, numesc);
-		}		
+		}	
+		
+		System.out.println("Introduzca el curso a consultar:");
+		int curso = Integer.parseInt(sc.nextLine());
 		
 		pstListarMatriculasAlu.setInt(1, numesc);
+		pstListarMatriculasAlu.setInt(2, curso);
 		ResultSet matriculasAlu = pstListarMatriculasAlu.executeQuery();
 		boolean hayMatriculas = matriculasAlu.next();
 		
 		if (hayMatriculas) {
-			System.out.println("El alumno está matriculado en los siguientes módulos: ");
+			System.out.println("El alumno está matriculado en los siguientes módulos para el curso " + curso + ": ");
 			matriculasAlu.beforeFirst();
 			while (matriculasAlu.next()) {
 				System.out.println("- " + matriculasAlu.getString("descripcion"));
@@ -515,6 +563,11 @@ public class Ejercicio11 {
 		}		
 	}
 	
+	/**
+	 * Método para grabar notas de un determinado alumno en el módulo indicado.
+	 * @param c
+	 * @throws SQLException
+	 */
 	public static void grabarNota(Connection c) throws SQLException {	
 		
 		Scanner sc = new Scanner(System.in);
@@ -572,5 +625,30 @@ public class Ejercicio11 {
 			
 			System.out.println("Calificación registrada con con éxito.");			
 		}			
+	}
+	
+	/**
+	 * Actualiza las matrículas para el curso indicado.
+	 * @param c
+	 */
+	public static void actualizaMatriculas(Connection c) throws SQLException {
+		Scanner sc = new Scanner(System.in);
+		boolean existeAlumno = false;
+		int numesc = 0;
+		int id=-1;
+		
+		while (!existeAlumno) {
+			System.out.println("Introduzca el número escolar del alumno:");
+			numesc = Integer.parseInt(sc.nextLine());
+			id = compruebaAlumnoYDevuelveID(c, numesc);
+			existeAlumno = (id>0);
+		}
+		PreparedStatement pstModPendientes = c.prepareStatement(modulos_pendientes);
+		pstModPendientes.setInt(1, id);
+		ResultSet rsModPendientes = pstModPendientes.executeQuery();
+		while(rsModPendientes.next()){
+			insertaMatricula(c, id, rsModPendientes.getString("codigo"), 2021);
+		}
+		
 	}
 }
