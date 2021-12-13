@@ -19,7 +19,7 @@ public class Ejercicio10 {
 	public static Connection con = null;
 	
 	public static String inserta_alumno =			 
-			"INSERT INTO ALUMNOS (nombre, apellido1, apellido2, email, edad) "
+			"INSERT INTO ALUMNO (nombre, apellido1, apellido2, email, edad) "
 			+ "VALUES (?, ?, ?, ?, ?);";
 	public static String consulta_codigo_modulo = 
 			" SELECT * FROM MODULO WHERE CODIGO = ? ";
@@ -101,6 +101,7 @@ public class Ejercicio10 {
 		switch(opc) {
 		case 1:
 			insertarAlumno(c);
+			break;
 		case 2:
 			insertarModulo(c);
 			break;
