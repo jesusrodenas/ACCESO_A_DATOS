@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<conexiones>
+	<conexion>
+		<datos>
+			<host>localhost</host>
+			<puerto>3306</puerto>
+			<nombre_bd>pruebaconexionbd</nombre_bd>
+			<usuario>root</usuario>
+			<password></password>
+		</datos>
+	</conexion>
+	<conexion>
+		<datos>
+			<host>185.224.138.49</host>
+			<puerto>3306</puerto>
+			<nombre_bd>u579684516_ACCDAT</nombre_bd>
+			<usuario>u579684516_ACCDAT</usuario>
+			<password>AccDat_2DAM</password>
+		</datos>
+	</conexion>
+</conexiones>
