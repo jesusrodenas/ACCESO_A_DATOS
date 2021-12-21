@@ -6,7 +6,7 @@ package accdat.UD01.manejoficheros.utilidades;
 import java.io.Serializable;
 
 /**
- * Clase necesaria para la realizaci�n del ejercicio 11
+ * Clase necesaria para la realización del ejercicio 11
  * @author JESUS
  *
  */

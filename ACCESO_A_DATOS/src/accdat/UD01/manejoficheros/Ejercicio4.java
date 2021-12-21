@@ -15,7 +15,8 @@ import accdat.UD01.manejoficheros.utilidades.Cadenas;
 
 /**
  * Ejercicio 4:
- * Escribir un fichero de bytes con un mensaje (no ser� legible) y envi�rselo a un compa�ero para que lo �descifre� mediante la lectura, transformaci�n y escritura por pantalla del mismo.
+ * Escribir un fichero de bytes con un mensaje (no será legible) y enviárselo a un compañero para que lo "descifre" mediante la lectura, 
+ * transformación y escritura por pantalla del mismo.
  *
  * @author JESUS
  *

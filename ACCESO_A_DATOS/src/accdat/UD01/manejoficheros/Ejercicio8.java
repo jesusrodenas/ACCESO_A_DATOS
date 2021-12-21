@@ -13,7 +13,7 @@ import accdat.UD01.manejoficheros.utilidades.Cadenas;
 
 /**
  * Ejercicio 8:
- * Realizar una modificaci�n del ejercicio 6 para que los nombres de los
+ * Realizar una modificación del ejercicio 6 para que los nombres de los
  * archivos a crear los lea de otro archivo llamado ficheros.txt.
  * @author JESUS
  *
@@ -29,7 +29,7 @@ public class Ejercicio8 {
 
 		try(BufferedReader br = new BufferedReader(
 				new FileReader(Cadenas.getUbicacion(FIC_ARCHIVOS)))) {
-			// Este ejercicio radica en leer l�nea a l�nea el fichero. Cada una de ellas ser� el nombre del
+			// Este ejercicio radica en leer línea a línea el fichero. Cada una de ellas será el nombre del
 			// fichero a crear.
 			String nombreArchivo = "";
 			nombreArchivo = br.readLine();
@@ -37,14 +37,14 @@ public class Ejercicio8 {
 			while (nombreArchivo!=null) {
 				File f = new File(Cadenas.getUbicacion(nombreArchivo));
 
-				// Esta versi�n controlar� que no exista un fichero del mismo nombre que vaya a ser machacado por error.
+				// Esta versión controlará que no exista un fichero del mismo nombre que vaya a ser machacado por error.
 				if(f.exists()) {
 					mensaje = "El archivo " + nombreArchivo + " ya existe. No ha podido ser creado";
 				}else {
-					mensaje = f.createNewFile()?"Archivo " + nombreArchivo + " creado con �xito.":"El archivo " + nombreArchivo + " no ha podido de ser creado.";
+					mensaje = f.createNewFile()?"Archivo " + nombreArchivo + " creado con éxito.":"El archivo " + nombreArchivo + " no ha podido de ser creado.";
 				}
 
-				// Indicamos el mensaje de lo sucedido y leemos una nueva l�nea del fichero de nombres de archivo.
+				// Indicamos el mensaje de lo sucedido y leemos una nueva línea del fichero de nombres de archivo.
 				System.out.println(mensaje);
 				nombreArchivo = br.readLine();
 			}

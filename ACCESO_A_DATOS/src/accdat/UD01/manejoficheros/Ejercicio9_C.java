@@ -35,7 +35,7 @@ public class Ejercicio9_C {
 	}
 
 	/**
-	 * Genera tantos insert como l�neas de alumnos hay en el fichero.
+	 * Genera tantos insert como líneas de alumnos hay en el fichero.
 	 *
 	 * @param idAlumno Recibe la primera clave del script.
 	 * @throws FileNotFoundException
@@ -59,7 +59,7 @@ public class Ejercicio9_C {
 			pw.write("/");
 			pw.close();
 
-			System.out.println("�ltimo �ndice insertado: " + idAlumno);
+			System.out.println("Último índice insertado: " + idAlumno);
 		}
 	}
 }

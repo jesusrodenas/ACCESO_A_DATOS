@@ -86,14 +86,14 @@ public class Libro implements Serializable {
 	public String toString() {
 		// TODO Auto-generated method stub
 		String mensaje = "Libro: \n";
-		mensaje       += " - T�tulo: " + titulo + "\n";
+		mensaje       += " - Título: " + titulo + "\n";
 		mensaje       += " - Autor: " + autor.nombre;
 		if (autor.apellidos!=null) {
 			mensaje   += " " + autor.apellidos[0] + autor.apellidos[1]+ "\n";
 		}else {
 			mensaje   += "\n";
 		}
-		mensaje       += " - N�m ejemplares: " + numEjemplares + "\n";
+		mensaje       += " - Núm ejemplares: " + numEjemplares + "\n";
 
 		return mensaje;
 	}

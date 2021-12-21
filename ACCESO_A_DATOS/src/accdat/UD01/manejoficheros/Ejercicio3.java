@@ -16,8 +16,8 @@ import accdat.UD01.manejoficheros.utilidades.Cadenas;
 /**
  * Ejercicio 2.
  *
- * Implementar una clase Java cuyo m�todo main copie el contenido de un
- * fichero �origen.txt� en un fichero �destino.txt�.
+ * Implementar una clase Java cuyo método main copie el contenido de un
+ * fichero "origen.txt" en un fichero "destino.txt"
  *
  * @author JESUS
  *
@@ -34,7 +34,7 @@ public class Ejercicio3 {
 		// PrintWriter para el fichero de destino.
 		PrintWriter pw = null;
 
-		// Variable que nos permitir� repetir la operaci�n de solicitar nombre de origen mientras no se inserte uno v�lido.
+		// Variable que nos permitirá repetir la operación de solicitar nombre de origen mientras no se inserte uno válido.
 		// Se inicializa a falso para entrar la primera vez en el programa.
 		boolean existe = false;
 
@@ -61,7 +61,7 @@ public class Ejercicio3 {
 			} catch (FileNotFoundException e) {
 				// El fichero no existe.
 				existe = false;
-				System.out.println(" ************** El fichero no existe. Repita la operaci�n ********************");
+				System.out.println(" ************** El fichero no existe. Repita la operación ********************");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -69,7 +69,7 @@ public class Ejercicio3 {
 				if (pw!=null) {
 					pw.close();
 				}
-				System.out.println("Operaci�n finalizada. Archivo copiado en: " + Cadenas.getUbicacion(ficDestino));
+				System.out.println("Operación finalizada. Archivo copiado en: " + Cadenas.getUbicacion(ficDestino));
 			}
 		}
 	}

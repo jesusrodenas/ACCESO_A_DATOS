@@ -79,9 +79,9 @@ public class Alumno implements Comparable<Alumno>{
 	/************* FIN GETTERS Y SETTERS ********************/
 
 	/**
-	 * M�todo est�tico que recibe una l�nea en formato csv y genera un objeto alumno.
-	 * @param linea l�nea de fichero csv de formato "apellido1;apellido2;nombre;edad"
-	 * @return Objeto alumno con la informaci�n.
+	 * Método estático que recibe una líne en formato csv y genera un objeto alumno.
+	 * @param linea línea de fichero csv de formato "apellido1;apellido2;nombre;edad"
+	 * @return Objeto alumno con la información.
 	 */
 	public static Alumno procesaLinea(String linea) {
 		String[] datos = linea.split(";");
@@ -91,9 +91,9 @@ public class Alumno implements Comparable<Alumno>{
 
 	@Override
 	/**
-	 * Implementaci�n del comparable.
+	 * Implementación del comparable.
 	 *
-	 * Criterios de ordenaci�n:
+	 * Criterios de ordenación:
 	 * 1. apellido1
 	 * 2. apellido2
 	 * 3. nombre
@@ -119,7 +119,7 @@ public class Alumno implements Comparable<Alumno>{
 
     @Override
     /**
-     * Implementamos el m�todo equals de la clase Alumno
+     * Implementamos el método equals de la clase Alumno
      */
     public boolean equals(Object obj) {
     	Alumno aux = (Alumno) obj;
@@ -129,7 +129,7 @@ public class Alumno implements Comparable<Alumno>{
 
     @Override
     /**
-     * Implementaci�n del m�todo toString para la salida por pantalla del apartado a.
+     * Implementación del método toString para la salida por pantalla del apartado a.
      */
     public String toString() {
     	String salida = "Alumno {Apellidos: " + this.apellido1 + " " + this .apellido2;
@@ -139,9 +139,9 @@ public class Alumno implements Comparable<Alumno>{
     }
 
     /**
-     * M�todo que obtendr� la l�nea de fichero csv de un objeto alumno.
+     * Método que obtendrá la línea de fichero csv de un objeto alumno.
      *
-     * @return l�nea de fichero csv de formato "apellido1;apellido2;nombre"
+     * @return  línea de fichero csv de formato "apellido1;apellido2;nombre"
      */
     public String toString_csv() {
     	return apellido1 + ";" + apellido2 + ";" + nombre + ";" + edad;

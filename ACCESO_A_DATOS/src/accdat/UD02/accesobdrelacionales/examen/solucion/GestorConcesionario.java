@@ -14,35 +14,47 @@ import java.sql.Types;
 import java.util.Scanner;
 
 /**
+ * Clase encargada de implementar la funcionalidad del progama del concesionario.
+ * Supondremos que el usuario inserta valores válidos entre los mostrados.
+ * 
  * @author JESUS
  *
  */
 public class GestorConcesionario {
-	public Connection con;
-	String sql_insertaCocheBD = "INSERT INTO COCHE(IDMARCA) VALUES (?)";
-	String sql_insertaVentaBD = "INSERT INTO VENTA (IDEMP, IDCOCHE, IMPORTE) VALUES (?, ? , ?)";
-	String sql_actualizaCocheBD = "UPDATE COCHE SET CODCOCHE = ? WHERE IDCOCHE = ?";
-	String sql_listaMarcas = "SELECT * FROM MARCA";
-	String sql_listaEmpleados = "SELECT IDEMP, CONCAT(APE1EMP, ' ',  APE2EMP, ' ', NOMEMP) EMPLEADO FROM EMPLEADO";
-	String sql_cochesNoVendidos = "SELECT C.IDCOCHE, CONCAT(M.DESCMARCA, '-', NVL(C.CODCOCHE, 'NO MATRICULADO')) AS COCHE FROM COCHE C JOIN MARCA M USING(IDMARCA) WHERE C.IDCOCHE NOT IN (SELECT IDCOCHE FROM VENTA) ORDER BY C.IDCOCHE ";
-	String sql_ventasPorMarca = "SELECT CONCAT(E.NOMEMP, ' ', E.APE1EMP , ' ', E.APE2EMP , ' - ', M.DESCMARCA , ' - ', V.IMPORTE ) AS DATOS FROM VENTA V JOIN EMPLEADO E USING(IDEMP) JOIN COCHE C USING (IDCOCHE) JOIN MARCA M USING(IDMARCA) WHERE M.DESCMARCA = ?";
-	String sql_ventasPorEmpleado = "select sum(importe) as cantidad from venta where idemp = ? group by idemp";
-	String sql_informSituacion = 
+	
+	// Conexión con la BD a través de la cual obtener Statement y PreparedStatement.
+	private Connection con;
+	private Scanner sc;
+	
+	// Sentencias necesarias en el programa.
+	private String sql_insertaCocheBD = "INSERT INTO COCHE(IDMARCA) VALUES (?)";
+	private String sql_insertaVentaBD = "INSERT INTO VENTA (IDEMP, IDCOCHE, IMPORTE) VALUES (?, ? , ?)";
+	private String sql_actualizaCocheBD = "UPDATE COCHE SET CODCOCHE = ? WHERE IDCOCHE = ?";
+	private String sql_listaMarcas = "SELECT * FROM MARCA";
+	private String sql_listaEmpleados = "SELECT IDEMP, CONCAT(APE1EMP, ' ',  APE2EMP, ' ', NOMEMP) EMPLEADO FROM EMPLEADO";
+	private String sql_cochesNoVendidos = "SELECT C.IDCOCHE, CONCAT(M.DESCMARCA, '-', NVL(C.CODCOCHE, 'NO MATRICULADO')) AS COCHE FROM COCHE C JOIN MARCA M USING(IDMARCA) WHERE C.IDCOCHE NOT IN (SELECT IDCOCHE FROM VENTA) ORDER BY C.IDCOCHE ";
+	private String sql_ventasPorMarca = "SELECT CONCAT(E.NOMEMP, ' ', E.APE1EMP , ' ', E.APE2EMP , ' - ', M.DESCMARCA , ' - ', V.IMPORTE ) AS DATOS FROM VENTA V JOIN EMPLEADO E USING(IDEMP) JOIN COCHE C USING (IDCOCHE) JOIN MARCA M USING(IDMARCA) WHERE M.DESCMARCA = ?";
+	private String sql_ventasPorEmpleado = "select sum(importe) as cantidad from venta where idemp = ? group by idemp";
+	private String sql_informeSituacion = 
 			"select concat(nomemp, ' ', APE1EMP, ' ', APE2EMP) as empl, nvl(mar.DESCMARCA, 'Este empleado aún no ha registrado ventas.') as vendido, ven.importe from empleado emp " +
 			" left join venta ven using(idemp) " +
 			" left join coche coc using(idcoche) " +
-			" left join marca mar using(idmarca) ";
-	
+			" left join marca mar using(idmarca) ";	
 	// llamada a la función de base de datos.
-	public static String llamada_funcion = "{ ? = call obtener_codigo(?)}";
+	private  static String llamada_funcion = "{ ? = call obtener_codigo(?)}";
 	
-	String datos_conexion = "jdbc:mysql://localhost:3306/concesionario";
-	String usuario = "root";
-	String password = "";
+	// Datos de conexión.
+	private String datos_conexion = "jdbc:mysql://localhost:3306/concesionario";
+	private String usuario = "root";
+	private String password = "";
 	
+	/**
+	 * El constructor sin parámetros creará la conexión con la BD
+	 */
 	public GestorConcesionario() {
 		try {
 			con = DriverManager.getConnection(datos_conexion, usuario, password);
+			sc = new Scanner(System.in);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,9 +73,9 @@ public class GestorConcesionario {
 	
 	public boolean insertaVentaBD(int idCoche, int idEmpleado, int importe) throws SQLException {
 		boolean insertado = false;
-		PreparedStatement pst = con.prepareStatement(sql_insertaVentaBD);
-		pst.setInt(1,  idCoche);
-		pst.setInt(2,  idEmpleado);
+		PreparedStatement pst = con.prepareStatement(sql_insertaVentaBD);		
+		pst.setInt(1,  idEmpleado);
+		pst.setInt(2,  idCoche);
 		pst.setInt(3,  importe);
 		insertado = (pst.executeUpdate()==1);
 		return insertado;
@@ -71,15 +83,16 @@ public class GestorConcesionario {
 	
 	public boolean actualizaCocheBD(int idCoche, String codCoche) throws SQLException {
 		boolean insertado = false;
-		PreparedStatement pst = con.prepareStatement(sql_actualizaCocheBD);
-		pst.setInt(1,  idCoche);
-		pst.setString(2,  codCoche);
+		PreparedStatement pst = con.prepareStatement(sql_actualizaCocheBD);		
+		pst.setString(1,  codCoche);
+		pst.setInt(2,  idCoche);
 		
 		insertado = (pst.executeUpdate()==1);
 		return insertado;
 	}
 	
-	// Métodos auxiliares
+	/////// Métodos auxiliares
+	/////// Métodos implementados para solucionar diversos subproblemas del programa. 
 	/**
 	 * Insertará vehículo devolviendo el id.
 	 * @param idMarca
@@ -123,7 +136,7 @@ public class GestorConcesionario {
 	public void muestraEmpleados() throws SQLException {
 		Statement stMarcas = con.createStatement();
 		ResultSet rsMarcas = stMarcas.executeQuery(sql_listaEmpleados);
-		System.out.println("Inqique el empleado de los posibles:");
+		System.out.println("Indique el empleado de los posibles:");
 		while (rsMarcas.next()) {
 			System.out.print(rsMarcas.getString("IDEMP"));
 			System.out.print(" - ");
@@ -138,7 +151,7 @@ public class GestorConcesionario {
 	public void muestraCochesNoVendidos() throws SQLException {
 		Statement stMarcas = con.createStatement();
 		ResultSet rsMarcas = stMarcas.executeQuery(sql_cochesNoVendidos);
-		System.out.println("Inqique el vehículo de los posibles:");
+		System.out.println("Indique el vehículo de los posibles:");
 		while (rsMarcas.next()) {
 			System.out.print(rsMarcas.getString("IDCOCHE"));
 			System.out.print(". ");
@@ -150,10 +163,10 @@ public class GestorConcesionario {
 	 * 
 	 * @throws SQLException
 	 */
-	public void muestraDescMarcas() throws SQLException {
+	public void muestraDescripcionMarcas() throws SQLException {
 		Statement stMarcas = con.createStatement();
 		ResultSet rsMarcas = stMarcas.executeQuery(sql_listaMarcas);
-		System.out.println("Inqique la marca de las posibles:");
+		System.out.println("Indique la marca de las posibles:");
 		while (rsMarcas.next()) {
 			System.out.println(rsMarcas.getString("DESCMARCA"));
 		}
@@ -164,19 +177,22 @@ public class GestorConcesionario {
 	 * @throws SQLException
 	 */
 	public void pintaVentasPorMarcas() throws SQLException {
-		Scanner sc = new Scanner(System.in);
-		muestraDescMarcas();
+		muestraDescripcionMarcas();
 		String marca = sc.nextLine();
 		pintaVentasPorMarca(marca);
 	}
 	
-	public void cierraConexion() {
+	/**
+	 * Método que será invocado en la finalización del programa para cerrar la conexión y la lectura de datos del usuario.	
+	 */
+	public void finaliza() {
 		if (con != null)
 			try {
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		sc.close();
 	}
 	
 	// ** SECCIÓN DE FUNCIONALIDAD DE LA APLICACIÓN.(30%)
@@ -191,18 +207,15 @@ public class GestorConcesionario {
 	 * 3) Muestra mensaje de inserción OK y el COCHE.CODCOCHE del vehículo insertado 
 	 * @throws SQLException 
 	 */
-	public void registraNuevoVehiculo() throws SQLException {
-		Scanner sc = new Scanner(System.in);
+	public void registraNuevoVehiculo() throws SQLException {		
 		muestraMarcas();
 		int idMarca = Integer.parseInt(sc.nextLine());
 		
 		int idCoche = insertaCocheBDDevuelveClave(idMarca);
 		String codCoche = generarCodigoCoche(idCoche);
 		
-		actualizaCocheBD(idCoche, codCoche);
-		
-		System.out.println("Coche insertado con éxito.");
-		sc.close();		
+		actualizaCocheBD(idCoche, codCoche);		
+		System.out.println("Coche de código " + codCoche + " insertado con éxito.");
 	}
 	
 	/**
@@ -211,9 +224,7 @@ public class GestorConcesionario {
 	 * 2) Muestra aquellos coches que aún no han sido vendidos. (MARCA.DESCMARCA - COCHE.CODCOCHE)
 	 * @throws SQLException 
 	 */
-	public void registraNuevaVenta() throws SQLException {	
-		Scanner sc = new Scanner(System.in);
-		
+	public void registraNuevaVenta() throws SQLException {		
 		muestraEmpleados();
 		int idEmpleado = Integer.parseInt(sc.nextLine());
 		
@@ -224,6 +235,7 @@ public class GestorConcesionario {
 		int importe = Integer.parseInt(sc.nextLine());
 		
 		insertaVentaBD(idCoche, idEmpleado, importe);
+		System.out.println("Venta registrada con éxito.");
 	}
 	
 	// ** SECCIÓN DE INFORMES DE LA APLICAIÓN (36%)
@@ -238,12 +250,18 @@ public class GestorConcesionario {
 	 * @throws SQLException 
 	 */
 	public void pintaVentasPorMarca(String marca) throws SQLException {	
+		boolean existe = false;
 		PreparedStatement pst = con.prepareStatement(sql_ventasPorMarca);
 		pst.setString(1, marca);
 		ResultSet rsVentas = pst.executeQuery();
 		while (rsVentas.next()) {
+			existe = true;
 			System.out.println(rsVentas.getString("datos"));
 		}		
+		
+		if (!existe) {
+			System.out.println("La marca introducida no está presente entre las registradas.");
+		}
 	}
 	
 	/**
@@ -253,18 +271,16 @@ public class GestorConcesionario {
 	 * @param idEmpleado
 	 * @throws SQLException 
 	 */
-	public void pintaTotalVentasEmpleado() throws SQLException {	
-		Scanner sc = new Scanner(System.in);
-		
+	public void pintaTotalVentasEmpleado() throws SQLException {		
 		muestraEmpleados();
 		int idEmpleado = Integer.parseInt(sc.nextLine());
 		
-		PreparedStatement pst = con.prepareStatement(sql_ventasPorMarca);
+		PreparedStatement pst = con.prepareStatement(sql_ventasPorEmpleado);
 		pst.setInt(1, idEmpleado);
 		ResultSet rsVentas = pst.executeQuery();
 		while (rsVentas.next()) {
 			System.out.println("El usuario indicado ha vendido por un total de " + rsVentas.getString("cantidad"));
-		}			
+		}
 	}
 	
 	/**
@@ -275,9 +291,39 @@ public class GestorConcesionario {
 	 *     - Kia: 18000
 	 * Laura Escudero Benítez:
 	 *     - Este empleado aún no ha registrado ventas.
+	 * @throws SQLException 
 	 *  
 	 */
-	public void informeSituacion() {		
+	public void informeSituacion() throws SQLException {		
+		Statement stInforme = con.createStatement();
+		ResultSet rsInforme = stInforme.executeQuery(sql_informeSituacion);		
+
+		String empleado = "", marca = "";
+		int importe = -1;		
+
+		boolean emplMostrado = false;	
+
+		while(rsInforme.next()) {
+			// Quiere decir que ha cambiado el empleado del listado.
+			if(!rsInforme.getString("empl").equals(empleado)) {
+				empleado = rsInforme.getString("empl");
+				emplMostrado = false;
+			}
+
+			marca    = rsInforme.getString("vendido");
+			importe  = rsInforme.getInt("importe");
+
+			if(!emplMostrado) {
+				System.out.println(empleado + ": ");
+				emplMostrado = true;
+			}
+
+			if ("Este empleado aún no ha registrado ventas.".equals(marca)) {
+				System.out.println("\t- " +  marca );
+			}else {
+				System.out.println("\t- " +  marca + ": " + importe + ".");
+			}
+		}
 	}
 	
 	// SECCIÓN GENERAR CÓDIGO DE VEHÍCULO. (11%)
@@ -294,7 +340,7 @@ public class GestorConcesionario {
 		Connection con_externa = DriverManager.getConnection("jdbc:mysql://185.224.138.49:3306/u579684516_ACCDAT", "u579684516_ACCDAT", "AccDat_2DAM");
 		
 		// Obtenermos una instancia de un objeto que implementa la interface CallableStatement.
-		CallableStatement cst = con.prepareCall(llamada_funcion);
+		CallableStatement cst = con_externa.prepareCall(llamada_funcion);
 					
 		// Se define el tipo de salida
 		cst.registerOutParameter(1, Types.VARCHAR);
@@ -306,6 +352,7 @@ public class GestorConcesionario {
 		
 		String codRet = cst.getString(1);
 		cst.close();
+		con_externa.close();
 		
 		return codRet; 
 	}

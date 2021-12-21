@@ -30,10 +30,14 @@ public class AplicacionConcesionario {
 			opc = muestraMenu();
 			tratarOpcion(opc, gc);
 		}while(opc!=6);
-		gc.cierraConexion();
+		gc.finaliza();
 		System.out.println("¡Hasta la próxima!");		
 	}
 	
+	/** 
+	 * Muestra las distintas opciones de menú del programa
+	 * @return devuelve el valor de la opción introducida por el usuario.
+	 */
 	public static int muestraMenu(){
 		Scanner sc = new Scanner(System.in);
 		int opc = 0;
@@ -46,10 +50,14 @@ public class AplicacionConcesionario {
 		System.out.println("6. Salir.");
 		
 		opc = Integer.parseInt(sc.nextLine());
-		return opc;
-		
+		return opc;		
 	}
 	
+	/**
+	 * llamará a cada uno de los métodos que se encargan de la realización de las funcionalidades indicadas por el usuario.
+	 * @param opcion operación introducida por el usuario.
+	 * @param gc Objeto que encapsula la funcionalidad de la aplicación.
+	 */
 	public static void tratarOpcion(int opcion, GestorConcesionario gc) {
 		try {
 			switch (opcion) {
@@ -67,10 +75,7 @@ public class AplicacionConcesionario {
 					break;
 				case 5:
 					gc.informeSituacion();
-					break;
-				case 6:
-					break;	
-					
+					break;					
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -33,8 +33,8 @@ public class Ejercicio9_A {
 	}
 
 	/**
-	 * Establece un flujo de lectura entre el fichero y nuestro programa y genera una colecci�n de objetos tipo Alumno.
-	 * @return Devolver� un List<Alumno> con los alumnos registrados en el fichero.
+	 * Establece un flujo de lectura entre el fichero y nuestro programa y genera una colección de objetos tipo Alumno.
+	 * @return Devolverá un List<Alumno> con los alumnos registrados en el fichero.
 	 */
 	public static void procesaFichero() {
 		try (FileReader flujoLectura = new FileReader(FICHERO_ALUMNOS);
@@ -51,8 +51,8 @@ public class Ejercicio9_A {
 	}
 
 	/**
-	 * Procesar� una l�nea del fichero de alumnos y devolver� un objeto de tipo Alumno con la informaci�n.
-	 * @param linea Ser� una l�nea del fichero con informaci�n del tipo "apellido1;apellido2;nombre;edad"
+	 * Procesará una línea del fichero de alumnos y devolverá un objeto de tipo Alumno con la información.
+	 * @param linea Será una línea del fichero con información del tipo "apellido1;apellido2;nombre;edad"
 	 */
 	public static void procesaLinea(String linea){
 		Alumno alu = Alumno.procesaLinea(linea);
@@ -63,15 +63,15 @@ public class Ejercicio9_A {
 	}
 
 	/**
-	 * Se valdr� del m�todo compareTo del comparable Alumno.
+	 * Se valdrá del método compareTo del comparable Alumno.
 	 */
 	public static void ordernaAlumnos() {
 		Collections.sort(conjuntoAlumnos);
 	}
 
 	/**
-	 * Ser� llamado tras el m�todo ordenar alumnos, por lo que la colecci�n conjuntoAlumnos estar� ordenada.
-	 * Abrimos flujo de escritura sobre el fichero ordenado y pintamos l�nea a l�nea.
+	 * Será llamado tras el método ordenar alumnos, por lo que la colección conjuntoAlumnos estará ordenada.
+	 * Abrimos flujo de escritura sobre el fichero ordenado y pintamos línea a línea.
 	 */
 	public static void generaFicheroOrdenado() {
 		try {

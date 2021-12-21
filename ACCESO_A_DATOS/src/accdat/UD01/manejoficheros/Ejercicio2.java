@@ -15,8 +15,8 @@ import accdat.UD01.manejoficheros.utilidades.Cadenas;
 /**
  * Ejercicio 2.
  *
- * Implementar una clase Java cuyo m�todo main copie el contenido de un
- * fichero �origen.txt� en un fichero �destino.txt�.
+ * Implementar una clase Java cuyo método main copie el contenido de un
+ * fichero "origen.txt" en un fichero "destino.txt".
  *
  * @author JESUS
  *
@@ -38,9 +38,9 @@ public class Ejercicio2 {
 				new FileReader(Cadenas.getUbicacion(FIC_ORIGEN)))){
 			pw = new PrintWriter (new FileWriter(Cadenas.getUbicacion(FIC_DESTINO)));
 
-			// En una �nica l�nea.
-			// - Actualizo el valor de la variable le�do con una nueva l�nea.
-			// - Controlo que ese contenido no sea nulo, ya que esa es la condici�n para salir del bucle.
+			// En una única línea.
+			// - Actualizo el valor de la variable leído con una nueva línea.
+			// - Se controla que ese contenido no sea nulo, ya que esa es la condición para salir del bucle.
 			while((leido=br.readLine())!=null) {
 				pw.println(leido);
 			}

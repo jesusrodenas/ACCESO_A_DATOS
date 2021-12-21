@@ -23,8 +23,8 @@ public class Ejercicio9_B {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Alumno aluNuevo = new Alumno("Jes�s", "R�denas", "Jaque", 38);
-		Alumno aluRepe =  new Alumno("Luis", "Ant�nez", "P�rez", 20);
+		Alumno aluNuevo = new Alumno("Jesús", "Ródenas", "Jaque", 38);
+		Alumno aluRepe =  new Alumno("Luis", "Antúnez", "Pérez", 20);
 
 		try {
 			insertaAlumno(aluNuevo);
@@ -35,10 +35,10 @@ public class Ejercicio9_B {
 	}
 
 	/**
-	 * Este m�todo recorrer� todo el fichero hasta finalizar O encontrar un alumno
-	 * ID�NTICO al pasado como par�metro.
-	 * Si encuentra alumno, informa de la imposibilidad de inserci�n.
-	 * Si no encuentra alumno, lo inserta e informa de la inserci�n.
+	 * Este método ecorrerá todo el fichero hasta finalizar O encontrar un alumno
+	 * IDÉNTICO al pasado como parámetro.
+	 * Si encuentra alumno, informa de la imposibilidad de inserción.
+	 * Si no encuentra alumno, lo inserta e informa de la inserción.
 	 * @param alumno
 	 * @throws IOException
 	 */
@@ -57,19 +57,19 @@ public class Ejercicio9_B {
 			}
 
 			if (!encontrado) {
-				// Apertura del fichero en modo a�adir.
+				// Apertura del fichero en modo añadir.
 				// FileWriter(String fileName, boolean append)
 				PrintWriter pw = new PrintWriter(new FileWriter(FICHERO_ALUMNOS, true));
 
-				// Inserci�n de salto de l�nea.
+				// Inserci�n de salto de línea.
 				pw.write("\n");
 
-				// Escritura de la l�nea correspondiente al alumno en formato csv.
+				// Escritura de la línea correspondiente al alumno en formato csv.
 				pw.println(alumno.toString_csv());
 
 				// cierre del flujo de salida.
 				pw.close();
-				System.out.println("Inserci�n realizada. Fichero actualizado.");
+				System.out.println("Inserción realizada. Fichero actualizado.");
 			}else{
 				System.out.println("No es posible insertar: El alumno ya existe en el fichero.");
 			}
