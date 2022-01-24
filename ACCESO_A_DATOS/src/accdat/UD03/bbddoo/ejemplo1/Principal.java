@@ -68,6 +68,7 @@ public class Principal {
 		System.out.println("2.Consutar BD completa");
 		System.out.println("3.Consultar personas con una edad");
 		System.out.println("4.Salir");
+		
 		do {
 			System.out.println("Introduce opcion");
 			opc = Integer.parseInt(teclado.nextLine());
@@ -100,8 +101,8 @@ public class Principal {
 	 * @param db Referencia a la BD.
 	 * @param edad Edad a consultar. Para ello se crea Persona con la edad pasada como parámetro.
 	 */
-	private static void consultarPersonasConEdad( ObjectContainer db, int edad) {		
-		Persona patron = new Persona(null, null, edad); // consultar todas las personas que tienen esa edad
+	private static void consultarPersonasConEdad( ObjectContainer db, int edad) {
+		Persona patron = new Persona(null, edad); // consultar todas las personas que tienen esa edad
 		Persona per;
 		
 		ObjectSet<Persona> result = db.queryByExample(patron);
@@ -131,7 +132,7 @@ public class Principal {
 	 * @return Devuelve un instancia del objeto persona con los datos ingresados por el usuario.
 	 */
 	private static Persona crearPersona() {
-		Persona persona = new Persona(solicitarCadena("Dni:"),solicitarCadena("Nombre: "),solicitarEdad());
+		Persona persona = new Persona(solicitarCadena("Nombre: "),solicitarEdad());
 		return persona;
 	}
 
